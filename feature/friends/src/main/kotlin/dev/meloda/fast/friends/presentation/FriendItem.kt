@@ -60,7 +60,7 @@ fun FriendItem(
                     .fillMaxSize()
                     .clip(CircleShape)
                     .clickable {
-                        friend.photo400Orig
+                        (friend.photo400Orig ?: friend.avatar)
                             ?.extractUrl()
                             ?.let(onPhotoClicked)
                     },

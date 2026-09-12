@@ -18,7 +18,7 @@ data class VkGroupData(
     @Json(name = "photo_50") val photo50: String?,
     @Json(name = "photo_100") val photo100: String?,
     @Json(name = "photo_200") val photo200: String?,
-    @Json(name = "photo_base") val photoBase: String? = null,
+    @Json(name = "photo_base") val photoBase: String?,
     @Json(name = "members_count") val membersCount: Int?
 ) {
 

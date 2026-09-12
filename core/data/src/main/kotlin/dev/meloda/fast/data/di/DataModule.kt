@@ -26,6 +26,7 @@ import dev.meloda.fast.data.db.AccountsRepositoryImpl
 import dev.meloda.fast.database.di.databaseModule
 import dev.meloda.fast.datastore.di.dataStoreModule
 import dev.meloda.fast.network.di.networkModule
+import dev.meloda.fast.data.interceptor.TokenRefreshInterceptor
 import okhttp3.Interceptor
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
@@ -67,5 +68,9 @@ val dataModule = module {
 
     single<Interceptor>(named("token_interceptor")) {
         AccessTokenInterceptor()
+    }
+
+    single<Interceptor>(named("token_refresh_interceptor")) {
+        TokenRefreshInterceptor(get(), get())
     }
 }

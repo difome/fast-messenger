@@ -102,6 +102,7 @@ private fun Scope.buildHttpClient(forAuth: Boolean): OkHttpClient {
         .apply {
             if (!forAuth) {
                 addInterceptor(get(named("token_interceptor")) as Interceptor)
+                addInterceptor(get(named("token_refresh_interceptor")) as Interceptor)
             }
         }
         .addInterceptor(get<Error14HandlingInterceptor>())

@@ -220,9 +220,12 @@ class CreateChatViewModel(
                                 screenState.value.friends.isNotEmpty()
 
                         val imagesToPreload =
-                            response.mapNotNull { friend ->
-                                friend.photo(100)
-                            }
+                            response.flatMap { friend ->
+                                listOfNotNull(
+                                    friend.photo(100),
+                                    friend.photo(50)
+                                )
+                            }.distinct()
 
                         imagesToPreload.forEach { url ->
                             imageLoader.enqueue(

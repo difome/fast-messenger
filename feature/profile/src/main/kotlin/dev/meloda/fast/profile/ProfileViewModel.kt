@@ -47,7 +47,7 @@ class ProfileViewModel(
                     logger.debug(this@ProfileViewModel::class, "SUCCESS")
                     emit(
                         screenState.value.copy(
-                            avatarUrl = user?.photo(400),
+                            avatarUrl = user?.photo(200),
                             fullName = user?.fullName
                         )
                     )
@@ -76,7 +76,7 @@ class ProfileViewModel(
 
                     screenState.setValue { old ->
                         old.copy(
-                            avatarUrl = user.photo(400),
+                            avatarUrl = user.photo(200),
                             fullName = user.fullName
                         )
                     }

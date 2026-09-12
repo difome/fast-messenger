@@ -36,13 +36,11 @@ data class VkPhotoDomain(
     }
 
     fun getMaxSize(): PhotoSize? {
-        return getSizeOrSmaller(sizesChars.peek()) ?: sizes.maxByOrNull { it.width }
+        return getSizeOrSmaller(sizesChars.peek())
     }
 
     fun getDefault(): PhotoSize? {
         return getSizeOrSmaller(SIZE_TYPE_1080_1024)
-            ?: sizes.filter { it.width <= 1080 }.maxByOrNull { it.width }
-            ?: sizes.firstOrNull()
     }
 
     fun getSizeOrNull(type: Char): PhotoSize? {

@@ -23,6 +23,7 @@ import dev.meloda.fast.data.api.users.UsersRepositoryImpl
 import dev.meloda.fast.data.api.videos.VideosRepository
 import dev.meloda.fast.data.db.AccountsRepository
 import dev.meloda.fast.data.db.AccountsRepositoryImpl
+import dev.meloda.fast.data.interceptor.TokenRefreshInterceptor
 import dev.meloda.fast.database.di.databaseModule
 import dev.meloda.fast.datastore.di.dataStoreModule
 import dev.meloda.fast.network.di.networkModule
@@ -67,5 +68,9 @@ val dataModule = module {
 
     single<Interceptor>(named("token_interceptor")) {
         AccessTokenInterceptor()
+    }
+
+    single<Interceptor>(named("token_refresh_interceptor")) {
+        TokenRefreshInterceptor(get<AccountsRepository>())
     }
 }

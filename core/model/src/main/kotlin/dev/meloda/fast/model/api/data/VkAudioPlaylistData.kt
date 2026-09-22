@@ -8,7 +8,7 @@ import com.squareup.moshi.JsonClass
 data class VkAudioPlaylistData(
     @Json(name = "id") val id: Long,
     @Json(name = "owner_id") val ownerId: Long,
-    @Json(name = "type") val type: Int,
+    @Json(name = "type") val type: String,
     @Json(name = "title") val title: String,
     @Json(name = "description") val description: String,
     // ... other fields

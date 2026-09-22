@@ -65,32 +65,27 @@ fun Attachments(
     val currentOnLongClick by rememberUpdatedState(onLongClick)
 
     Column(modifier = modifier) {
-        val previewPairs = remember(attachments) {
-            attachments.values
-                .filter { it.type in previewTypes }
-                .mapNotNull { attachment ->
-                    val preview = attachment.asUiPhoto() ?: return@mapNotNull null
-                    preview to attachment
-                }
+        val previewAttachments = remember(attachments) {
+            attachments.values.filter { it.type in previewTypes }
         }
 
         val nonPreviewAttachments = remember(attachments) {
             attachments.values.filterNot { it.type in previewTypes }.sortedBy { it.type.ordinal }
         }
 
-        if (previewPairs.isNotEmpty()) {
+        if (previewAttachments.isNotEmpty()) {
             DynamicPreviewGrid(
                 withText = withText,
                 withReply = withReply,
                 modifier = Modifier,
-                previews = previewPairs
-                    .map { it.first }
+                previews = previewAttachments
+                    .map(VkAttachment::asUiPhoto)
                     .toImmutableList(),
                 onClick = { index ->
-                    currentOnClick(previewPairs[index].second)
+                    currentOnClick(previewAttachments[index])
                 },
                 onLongClick = { index ->
-                    currentOnLongClick(previewPairs[index].second)
+                    currentOnLongClick(previewAttachments[index])
                 }
             )
         }
@@ -222,12 +217,10 @@ fun Attachments(
     }
 }
 
-fun VkAttachment.asUiPhoto(): UiPreview? {
+fun VkAttachment.asUiPhoto(): UiPreview {
     return when (this) {
         is VkPhotoDomain -> {
-            val size = this.getDefault() ?: return null
-            if (size.url.isBlank() || size.width <= 0 || size.height <= 0) return null
-
+            val size = this.getDefault()!!
             UiPreview(
                 id = this.id,
                 url = size.url,
@@ -238,8 +231,12 @@ fun VkAttachment.asUiPhoto(): UiPreview? {
         }
 
         is VkVideoDomain -> {
-            val size = this.getDefault() ?: return null
-            if (size.url.isBlank() || size.width <= 0 || size.height <= 0) return null
+            val size = this.getDefault() ?: VkVideoDomain.VideoImage(
+                width = 1280,
+                height = 720,
+                url = "",
+                withPadding = false
+            )
 
             UiPreview(
                 id = this.id,
@@ -251,11 +248,10 @@ fun VkAttachment.asUiPhoto(): UiPreview? {
         }
 
         is VkFileDomain -> {
-            val video = this.preview?.video
-            val photoSize = this.preview?.photo?.sizes?.firstOrNull()
-
             when {
-                video != null && video.src.isNotBlank() && video.width > 0 && video.height > 0 -> {
+                this.preview?.video != null -> {
+                    val video = this.preview?.video!!
+
                     UiPreview(
                         id = id,
                         url = video.src,
@@ -265,7 +261,9 @@ fun VkAttachment.asUiPhoto(): UiPreview? {
                     )
                 }
 
-                photoSize != null && photoSize.src.isNotBlank() && photoSize.width > 0 && photoSize.height > 0 -> {
+                this.preview?.photo != null -> {
+                    val photoSize = this.preview?.photo?.sizes?.first()!!
+
                     UiPreview(
                         id = id,
                         url = photoSize.src,
@@ -275,11 +273,11 @@ fun VkAttachment.asUiPhoto(): UiPreview? {
                     )
                 }
 
-                else -> null
+                else -> error("Unsupported type: $this")
             }
         }
 
-        else -> null
+        else -> error("Unsupported type: $this")
     }
 }
 

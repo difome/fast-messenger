@@ -1,5 +1,6 @@
 package dev.meloda.fast.messageshistory.presentation
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -33,6 +34,8 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import dev.meloda.fast.common.ImmutableList
+import dev.meloda.fast.common.emptyImmutableList
 import dev.meloda.fast.domain.util.annotated
 import dev.meloda.fast.messageshistory.presentation.attachments.Attachments
 import dev.meloda.fast.messageshistory.presentation.attachments.Reply
@@ -43,8 +46,6 @@ import dev.meloda.fast.ui.common.FastPreview
 import dev.meloda.fast.ui.model.vk.SendingStatus
 import dev.meloda.fast.ui.theme.AppTheme
 import dev.meloda.fast.ui.theme.LocalThemeConfig
-import dev.meloda.fast.common.ImmutableList
-import dev.meloda.fast.common.emptyImmutableList
 
 @Composable
 fun MessageBubble(
@@ -73,6 +74,7 @@ fun MessageBubble(
 
     val theme = LocalThemeConfig.current
     val colors = messageBubbleColors(isOut = isOut)
+    val bubbleBackgroundColor by animateColorAsState(targetValue = colors.container)
 
     val shouldShowBubble = !text.isNullOrEmpty()
 
@@ -151,7 +153,7 @@ fun MessageBubble(
                                 bottomEnd = if (attachments != null) 0.dp else 24.dp
                             )
                         )
-                        .background(colors.container)
+                        .background(bubbleBackgroundColor)
                         .padding(
                             start = 8.dp,
                             end = 8.dp,

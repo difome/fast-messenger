@@ -2,7 +2,9 @@ package dev.meloda.fast.messageshistory.presentation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -62,9 +64,15 @@ fun IncomingMessageBubble(
         mutableStateOf(0.dp)
     }
 
+    val unreadContainerBackgroundAlpha by animateFloatAsState(if (!message.isRead) 0.75f else 0f)
+    val containerUnreadColor =
+        MaterialTheme.colorScheme.primaryContainer.copy(alpha = unreadContainerBackgroundAlpha)
+
     Row(
         modifier = modifier
+            .background(containerUnreadColor)
             .fillMaxWidth()
+            .padding(vertical = 2.dp)
             .then(
                 if (enableAnimations) Modifier.animateContentSize()
                 else Modifier
